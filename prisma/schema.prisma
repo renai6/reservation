@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  reservations Reservation[]
+}
+
+model Seat {
+  id          String     @id @default(cuid())
+  seatNumber  Int        @unique
+  status      SeatStatus @default(AVAILABLE)
+  lockedUntil DateTime?
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id              String            @id @default(cuid())
+  userId          String
+  seatId          String
+  status          ReservationStatus @default(PENDING)
+  paymentIntentId String?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  seat Seat @relation(fields: [seatId], references: [id])
+}
+
+enum SeatStatus {
+  AVAILABLE
+  LOCKED
+  RESERVED
+}
+
+enum ReservationStatus {
+  PENDING
+  PAID
+  FAILED
+}
