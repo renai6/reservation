@@ -58,8 +58,10 @@ Run the Prisma migration to create tables:
 pnpm prisma migrate deploy
 ```
 
+Generate Prisma Client:
+
 ```bash
-pnpm pnpm prisma generate
+pnpm prisma generate
 ```
 
 ### 4. Start the development server
